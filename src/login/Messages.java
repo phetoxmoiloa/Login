@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * Handles message validation, message ID generation,
+ * message hashing, sending, storing, and printing.
+ */
 public class Messages {
     private String recipient;
     private String message;
@@ -12,6 +16,10 @@ public class Messages {
     private int messageNumber;
     private final Scanner sc;
 
+    /**
+     * Creates a Messages object using the recipient cell number
+     * and the message text entered by the user.
+     */
     public Messages(String recipient, String message) {
         this.recipient = recipient;
         this.message = message;
@@ -20,6 +28,10 @@ public class Messages {
         generateMessageID();
     }
 
+    /**
+     * Checks whether the message is within the 250-character limit.
+     * @return validation result message
+     */
     public String checkMessages() {
         if (message.length() <= 250) {
             return "Message ready to send.";
@@ -29,6 +41,10 @@ public class Messages {
         }
     }
 
+    /**
+     * Checks whether the recipient number starts with + and is valid.
+     * @return validation result message
+     */
     public String checkRecipientCell() {
         if (recipient != null && recipient.startsWith("+") && recipient.length() <= 13) {
             return "Cell phone number successfully captured.";
@@ -37,17 +53,30 @@ public class Messages {
         }
     }
 
+    /**
+     * Generates a random 10-digit message ID.
+     * @return generated message ID
+     */
     public String generateMessageID() {
         Random rand = new Random();
-        long num = 1000000000L + (long)(rand.nextDouble() * 9000000000L);
+        long num = 1000000000L + (long) (rand.nextDouble() * 9000000000L);
         messageID = String.valueOf(num);
         return messageID;
     }
 
+    /**
+     * Checks whether the generated message ID is exactly 10 characters long.
+     * @return true if valid, otherwise false
+     */
     public boolean checkMessageID() {
         return messageID != null && messageID.length() == 10;
     }
 
+    /**
+     * Creates a message hash using the first two digits of the message ID,
+     * the message number, and the first and last words of the message.
+     * @return uppercase message hash
+     */
     public String createMessageHash() {
         String[] words = message.trim().split("\\s+");
         String firstWord = words[0].replaceAll("[^a-zA-Z]", "");
@@ -57,6 +86,10 @@ public class Messages {
         return hash.toUpperCase();
     }
 
+    /**
+     * Allows the user to choose whether to send, discard, or store the message.
+     * @return result message based on user choice
+     */
     public String sentMessages() {
         System.out.println("1) Send Message");
         System.out.println("2) Disregard Message");
@@ -82,15 +115,26 @@ public class Messages {
         }
     }
 
+    /**
+     * Returns all messages sent while the program is running.
+     * @return formatted message details
+     */
     public String printMessages() {
         return "Message ID: " + messageID + "\nMessage Hash: " + createMessageHash()
                 + "\nRecipient: " + recipient + "\nMessage: " + message;
     }
 
+    /**
+     * Returns the total number of messages sent.
+     * @return total messages sent
+     */
     public int returnTotalMessages() {
         return messageNumber;
     }
 
+    /**
+     * Stores the message details in a JSON file.
+     */
     public void storeMessage() {
         try (FileWriter fw = new FileWriter("messages.json", true)) {
             String json = "{"
