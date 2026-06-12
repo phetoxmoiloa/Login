@@ -37,7 +37,7 @@ public class Login {
     // Method to validate South African international phone number format
     // Must start with +27 followed by 9 digits
     public boolean checkCellPhoneNumber(){
-        return cellNum.matches("\\+27\\d{9}");
+    return cellNum.matches("\\+\\d{9,}");
     }
     
     // Method used during registration to confirm if all details are valid

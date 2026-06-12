@@ -1,127 +1,127 @@
-
 package login;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Test;           
+import static org.junit.Assert.*;
 
 public class MessagesTest {
-    
-    public MessagesTest() {
-    }
 
-    /**
-     * Test of checkMessages method, of class Messages.
-     */
     @Test
-    public void testCheckMessages() {
-        System.out.println("checkMessages");
-        Messages instance = null;
-        String expResult = "";
-        String result = instance.checkMessages();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+    public void testMessageUnder250Characters() {
+
+        Messages msg = new Messages(
+                "+27718693002",
+                "Hi Mike, can you join us for dinner tonight?");
+
+        assertEquals(
+                "Message ready to send.",
+                msg.checkMessages()
+        );
     }
 
-    /**
-     * Test of checkRecipientCell method, of class Messages.
-     */
     @Test
-    public void testCheckRecipientCell() {
-        System.out.println("checkRecipientCell");
-        Messages instance = null;
-        String expResult = "";
-        String result = instance.checkRecipientCell();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+    public void testMessageOver250Characters() {
+
+        String longMessage =
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              + "aaaa";
+
+        Messages msg = new Messages("+27718693002", longMessage);
+
+        assertTrue(
+                msg.checkMessages().contains("Message exceeds 250 characters")
+        );
     }
 
-    /**
-     * Test of generateMessageID method, of class Messages.
-     */
+    @Test
+    public void testValidRecipientNumber() {
+
+        Messages msg = new Messages(
+                "+27718693002",
+                "Hi Mike, can you join us for dinner tonight?");
+
+        assertEquals(
+                "Cell phone number successfully captured.",
+                msg.checkRecipientCell()
+        );
+    }
+
+    @Test
+    public void testInvalidRecipientNumber() {
+
+        Messages msg = new Messages(
+                "08575975889",
+                "Hi Keegan, did you receive the payment?");
+
+        assertEquals(
+                "Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.",
+                msg.checkRecipientCell()
+        );
+    }
+
+    @Test
+    public void testMessageIDLength() {
+
+        Messages msg = new Messages(
+                "+27718693002",
+                "Hello");
+
+        assertTrue(msg.checkMessageID());
+    }
+
     @Test
     public void testGenerateMessageID() {
-        System.out.println("generateMessageID");
-        Messages instance = null;
-        String expResult = "";
-        String result = instance.generateMessageID();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+
+        Messages msg = new Messages(
+                "+27718693002",
+                "Hello");
+
+        String id = msg.generateMessageID();
+
+        assertNotNull(id);
+        assertEquals(10, id.length());
     }
 
-    /**
-     * Test of checkMessageID method, of class Messages.
-     */
     @Test
-    public void testCheckMessageID() {
-        System.out.println("checkMessageID");
-        Messages instance = null;
-        boolean expResult = false;
-        boolean result = instance.checkMessageID();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+    public void testMessageHashCreated() {
+
+        Messages msg = new Messages(
+                "+27718693002",
+                "Hi Mike, can you join us for dinner tonight?");
+
+        String hash = msg.createMessageHash();
+
+        assertNotNull(hash);
+        assertTrue(hash.contains("HI"));
+        assertTrue(hash.contains("TONIGHT"));
     }
 
-    /**
-     * Test of createMessageHash method, of class Messages.
-     */
-    @Test
-    public void testCreateMessageHash() {
-        System.out.println("createMessageHash");
-        Messages instance = null;
-        String expResult = "";
-        String result = instance.createMessageHash();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of sentMessages method, of class Messages.
-     */
-    @Test
-    public void testSentMessages() {
-        System.out.println("sentMessages");
-        Messages instance = null;
-        String expResult = "";
-        String result = instance.sentMessages();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of printMessages method, of class Messages.
-     */
     @Test
     public void testPrintMessages() {
-        System.out.println("printMessages");
-        Messages instance = null;
-        String expResult = "";
-        String result = instance.printMessages();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+
+        Messages msg = new Messages(
+                "+27718693002",
+                "Hello");
+
+        assertNotNull(msg.printMessages());
     }
 
-    /**
-     * Test of returnTotalMessages method, of class Messages.
-     */
     @Test
     public void testReturnTotalMessages() {
-        System.out.println("returnTotalMessages");
-        Messages instance = null;
-        int expResult = 0;
-        int result = instance.returnTotalMessages();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+
+        Messages msg = new Messages(
+                "+27718693002",
+                "Hello");
+
+        assertEquals(0, msg.returnTotalMessages());
     }
 
-    /**
-     * Test of storeMessage method, of class Messages.
-     */
     @Test
-    public void testStoreMessage() {
-        System.out.println("storeMessage");
-        Messages instance = null;
-        instance.storeMessage();
-        fail("The test case is a prototype.");
-    }
-    
+public void testStoreMessage() {
+    Messages msg = new Messages("+27718693002", "Hello");
+    msg.storeMessage();
+}
 }
